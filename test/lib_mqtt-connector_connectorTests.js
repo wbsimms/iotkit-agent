@@ -68,6 +68,7 @@ describe(fileToTest, function(){
             id = "0a-03-12-22";
 
         var myBroker = toTest.singleton(config, logger);
+
         var client = new mqtt.MqttClient();
         mqtt.createClient = function (port, host ) {
             assert.lengthOf(arguments, 3, "Missing Argument for Secure Connection");
@@ -77,6 +78,10 @@ describe(fileToTest, function(){
             client.connected = true;
             return client;
         };
+
+        client.on = ('Connection Error', function () {
+            return client;
+        });
 
         myBroker.connect(function(err) {
             assert.isNull(err, "None error shall returned");
@@ -98,9 +103,15 @@ describe(fileToTest, function(){
             assert.lengthOf(arguments, 3, "Missing Argument for Secure Connection");
             assert.equal(port, config.port, "The port has override");
             assert.equal(host, config.host, "The host has override");
+
             client.connected = true;
             return client;
         };
+
+        client.on = ('Connection Error', function () {
+            return client;
+        });
+
         myBroker.connect(function(err) {
             assert.isNull(err, "Not Spected error Returned");
             done();
@@ -122,6 +133,7 @@ describe(fileToTest, function(){
             throw new Error("Invalid Command");
             return client;
         };
+
         myBroker.connect(function(err) {
             assert.instanceOf(err, Error, "Shallbe an error Returned");
             done();
@@ -149,6 +161,9 @@ describe(fileToTest, function(){
             return client;
         };
 
+        client.on = ('Connection Error', function () {
+            return client;
+        });
 
         myBroker.connect(function(err) {
             assert.isNull(err, "None error shall be returned");
@@ -190,6 +205,9 @@ describe(fileToTest, function(){
             return client;
         };
 
+        client.on = ('Connection Error', function () {
+            return client;
+        });
 
         var myBroker = toTest.singleton(config, logger);
         myBroker.setCredential(crd);
@@ -237,6 +255,11 @@ describe(fileToTest, function(){
             var granted = [{ topic: vtopic}];
             cb(null, granted);
         };
+
+        client.on = ('Connection Error', function () {
+            return client;
+        });
+
         myBroker.connect(function(err) {
            assert.isNull(err, "None error shall returned");
            myBroker.bind(topicPattern, topicHandler);
@@ -261,12 +284,17 @@ describe(fileToTest, function(){
         var client = new mqtt.MqttClient();
         var callHandler = null;
         client.on = function (event, handler) {
+            if(event === "error"){
+                return client;
+            }
             assert.isFunction(handler, "The handle shall be a function");
             assert.isString(event, "The event shall be string");
-            assert.include(["message", "connect", "close"], event, "Invalid event listeneter");
+            assert.include(["message", "connect", "close", "error"], event, "Invalid event listeneter");
+
             if(event === "message") {
                 callHandler = handler;
             }
+
             console.log(event);
            // handler("connector", JSON.stringify(msg));
         };
@@ -302,6 +330,9 @@ describe(fileToTest, function(){
         var callHandler = null;
         var client = new mqtt.MqttClient();
         client.on = function (event, handler) {
+            if(event === "error"){
+                return client;
+            }
             assert.isFunction(handler, "The handle shall be a function");
             assert.isString(event, "The event shall be string");
             assert.include(["message", "connect", "close"], event, "Invalid event listener");
@@ -349,6 +380,9 @@ describe(fileToTest, function(){
         var callHandler = null;
         var client = new mqtt.MqttClient();
         client.on = function (event, handler) {
+            if(event === "error"){
+                return client;
+            }
             assert.isFunction(handler, "The handle shall be a function");
             assert.isString(event, "The event shall be string");
             assert.include(["message", "connect", "close"], event, "Invalid event listeneter");
@@ -405,6 +439,9 @@ describe(fileToTest, function(){
         var callHandler = null;
         var client = new mqtt.MqttClient();
         client.on = function (event, handler) {
+            if(event === "error"){
+                return client;
+            }
             assert.isFunction(handler, "The handle shall be a function");
             assert.isString(event, "The event shall be string");
             assert.include(["message", "connect", "close"], event, "Invalid event listeneter");
@@ -457,6 +494,11 @@ describe(fileToTest, function(){
             client.connected = true;
             return client;
         };
+
+        client.on = ('Connection Error', function () {
+            return client;
+        });
+
         client.end = function () {
             done();
         };
