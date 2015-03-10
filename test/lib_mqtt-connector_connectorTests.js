@@ -49,6 +49,10 @@ describe(fileToTest, function(){
         debug : function() {}
     };
 
+    var errorHandler = ('Connection Error', function(){
+        return this;
+    });
+
     console.debug = function() {
         console.log(arguments);
     };
@@ -79,9 +83,7 @@ describe(fileToTest, function(){
             return client;
         };
 
-        client.on = ('Connection Error', function () {
-            return client;
-        });
+        client.on = errorHandler;
 
         myBroker.connect(function(err) {
             assert.isNull(err, "None error shall returned");
@@ -108,9 +110,7 @@ describe(fileToTest, function(){
             return client;
         };
 
-        client.on = ('Connection Error', function () {
-            return client;
-        });
+        client.on = errorHandler;
 
         myBroker.connect(function(err) {
             assert.isNull(err, "Not Spected error Returned");
@@ -161,9 +161,7 @@ describe(fileToTest, function(){
             return client;
         };
 
-        client.on = ('Connection Error', function () {
-            return client;
-        });
+        client.on = errorHandler;
 
         myBroker.connect(function(err) {
             assert.isNull(err, "None error shall be returned");
@@ -205,9 +203,7 @@ describe(fileToTest, function(){
             return client;
         };
 
-        client.on = ('Connection Error', function () {
-            return client;
-        });
+        client.on = errorHandler;
 
         var myBroker = toTest.singleton(config, logger);
         myBroker.setCredential(crd);
@@ -256,9 +252,7 @@ describe(fileToTest, function(){
             cb(null, granted);
         };
 
-        client.on = ('Connection Error', function () {
-            return client;
-        });
+        client.on = errorHandler;
 
         myBroker.connect(function(err) {
            assert.isNull(err, "None error shall returned");
