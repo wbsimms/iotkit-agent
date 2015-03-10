@@ -105,7 +105,7 @@ function Broker(conf, logger) {
                    me.logger.info("Trying with Secure Connection to" + me.host + ":" + me.port);
                    me.logger.debug("with " + JSON.stringify(me.credential));
                    me.client = mqtt.createSecureClient(me.port, me.host, me.credential).on('error', function(e){
-                       logger.warn("Error in connection: " + JSON.stringify(e));
+                       logger.warn("Error in secure connection: " + JSON.stringify(e));
                    });
                 }
             }
